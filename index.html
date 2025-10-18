@@ -1,82 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Opex Editor</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purple Galaxy CodeMirror 6 Editor</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #0d0d0f;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: linear-gradient(to bottom, #0a0015, #1a0033);
+      font-family: Arial, sans-serif;
     }
-
-    #editor {
-      width: 800px;
-      height: 500px;
-      border-radius: 16px;
-      background: #101014;
-      box-shadow: 0 0 0 0 transparent;
-      transition: all 0.25s cubic-bezier(.22,1,.36,1);
-      overflow: hidden;
-    }
-
-    #editor:focus-within {
-      box-shadow: 0 0 22px #00ffd055;
-      transform: scale(1.01);
-    }
-
     .cm-editor {
-      height: 100%;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #e6e6e6;
+      width: 80%;
+      max-width: 800px;
+      height: 500px;
+      border: 2px solid #6a0dad;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(106, 13, 173, 0.5);
+      background: #120024;
     }
-
-    .cm-content {
-      padding: 14px;
+    /* Custom Purple Galaxy Theme */
+    .cm-theme-purple-galaxy {
+      --bg-color: #120024;
+      --text-color: #e6e6fa;
+      --cursor-color: #ff00ff;
+      --selection-bg: rgba(106, 13, 173, 0.3);
+      --keyword-color: #ff00ff;
+      --string-color: #dda0dd;
+      --number-color: #00b7eb;
+      --comment-color: #8a2be2;
+      --function-color: #ff69b4;
+      --variable-color: #e6e6fa;
+      --bracket-color: #d8bfd8;
     }
-
-    .cm-cursor {
-      transition: top 0.1s ease, left 0.1s ease;
-      animation: blink 1.1s steps(2, start) infinite;
+    .cm-theme-purple-galaxy .cm-scroller {
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Courier New', monospace;
     }
-
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
+    .cm-theme-purple-galaxy .cm-content {
+      caret-color: var(--cursor-color);
+    }
+    .cm-theme-purple-galaxy .cm-selectionBackground {
+      background: var(--selection-bg);
+    }
+    .cm-theme-purple-galaxy .tok-keyword {
+      color: var(--keyword-color);
+    }
+    .cm-theme-purple-galaxy .tok-string {
+      color: var(--string-color);
+    }
+    .cm-theme-purple-galaxy .tok-number {
+      color: var(--number-color);
+    }
+    .cm-theme-purple-galaxy .tok-comment {
+      color: var(--comment-color);
+    }
+    .cm-theme-purple-galaxy .tok-function {
+      color: var(--function-color);
+    }
+    .cm-theme-purple-galaxy .tok-variable {
+      color: var(--variable-color);
+    }
+    .cm-theme-purple-galaxy .tok-bracket {
+      color: var(--bracket-color);
+    }
+    .cm-theme-purple-galaxy .cm-gutters {
+      background: #1a0033;
+      color: #e6e6fa;
+      border-right: 1px solid #6a0dad;
+    }
+    .cm-theme-purple-galaxy .cm-lineNumbers .cm-gutterElement {
+      color: #e6e6fa;
+    }
+    .cm-theme-purple-galaxy .cm-activeLine {
+      background: rgba(106, 13, 173, 0.2);
+    }
+    .cm-theme-purple-galaxy .cm-cursor {
+      border-left: 2px solid var(--cursor-color);
     }
   </style>
 </head>
 <body>
   <div id="editor"></div>
 
-  <script type="module">
-    import { EditorView, basicSetup } from "https://cdn.jsdelivr.net/npm/@codemirror/basic-setup@0.20.0/dist/index.js";
-    import { EditorState } from "https://cdn.jsdelivr.net/npm/@codemirror/state@0.19.1/dist/index.js";
-    import { javascript } from "https://cdn.jsdelivr.net/npm/@codemirror/lang-javascript@0.19.7/dist/index.js";
-    import { oneDark } from "https://cdn.jsdelivr.net/npm/@codemirror/theme-one-dark@0.19.3/dist/index.js";
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+  <script>
+    import { EditorView, basicSetup } from "https://esm.sh/@codemirror/basic-setup";
+    import { javascript } from "https://esm.sh/@codemirror/lang-javascript";
 
-    const startCode = `// Opex Editor - CodeMirror 6
-// Smooth and webview-ready
-console.log("Editor loaded successfully");`;
+    // Create the purple galaxy theme
+    const purpleGalaxyTheme = EditorView.theme({
+      "&": {
+        backgroundColor: "var(--bg-color)",
+        color: "var(--text-color)",
+        height: "100%"
+      },
+      ".cm-content": {
+        caretColor: "var(--cursor-color)"
+      },
+      ".cm-selectionBackground": {
+        background: "var(--selection-bg)"
+      },
+      ".tok-keyword": { color: "var(--keyword-color)" },
+      ".tok-string": { color: "var(--string-color)" },
+      ".tok-number": { color: "var(--number-color)" },
+      ".tok-comment": { color: "var(--comment-color)" },
+      ".tok-function": { color: "var(--function-color)" },
+      ".tok-variable": { color: "var(--variable-color)" },
+      ".tok-bracket": { color: "var(--bracket-color)" },
+      ".cm-gutters": {
+        background: "#1a0033",
+        color: "#e6e6fa",
+        borderRight: "1px solid #6a0dad"
+      },
+      ".cm-lineNumbers .cm-gutterElement": {
+        color: "#e6e6fa"
+      },
+      ".cm-activeLine": {
+        background: "rgba(106, 13, 173, 0.2)"
+      },
+      ".cm-cursor": {
+        borderLeft: "2px solid var(--cursor-color)"
+      }
+    }, { dark: true });
 
-    const state = EditorState.create({
-      doc: startCode,
-      extensions: [basicSetup, javascript(), oneDark]
-    });
+    // Sample JavaScript code
+    const initialCode = `// Welcome to the Purple Galaxy Editor!
+function exploreGalaxy() {
+  const stars = 1000000;
+  let message = "Exploring the cosmos...";
+  console.log(message);
+  for (let i = 0; i < stars; i++) {
+    shineStar(i);
+  }
+}
 
-    const view = new EditorView({
-      state,
+function shineStar(starId) {
+  return \`Star \${starId} is shining!\`;
+}`;
+
+    // Initialize CodeMirror editor
+    const editor = new EditorView({
+      state: EditorState.create({
+        doc: initialCode,
+        extensions: [
+          basicSetup,
+          javascript(),
+          purpleGalaxyTheme
+        ]
+      }),
       parent: document.getElementById("editor")
     });
-
-    // Expose for WebView
-    window.getCode = () => view.state.doc.toString();
   </script>
 </body>
 </html>
