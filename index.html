@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Opex Editor</title>
+
+  <!-- Basic styling for a smooth, dark aesthetic -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #0e0e10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #editor {
+      width: 800px;
+      height: 500px;
+      border-radius: 16px;
+      background: #101014;
+      color: #e6e6e6;
+      box-shadow: 0 0 0 0 transparent;
+      transition: all 0.25s cubic-bezier(.22,1,.36,1);
+      overflow: hidden;
+    }
+
+    #editor:focus-within {
+      box-shadow: 0 0 22px #00ffd055;
+      transform: scale(1.01);
+    }
+
+    .cm-editor {
+      height: 100%;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .cm-content {
+      padding: 14px;
+    }
+
+    .cm-cursor {
+      transition: top 0.1s ease, left 0.1s ease;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .cm-cursor {
+      animation: blink 1.1s steps(2, start) infinite;
+    }
+  </style>
+</head>
+<body>
+  <div id="editor"></div>
+
+  <!-- Load CodeMirror 6 modules via esm.sh CDN -->
+  <script type="module">
+    import { EditorState } from "https://esm.sh/@codemirror/state";
+    import { EditorView, basicSetup } from "https://esm.sh/@codemirror/basic-setup";
+    import { javascript } from "https://esm.sh/@codemirror/lang-javascript";
+    import { oneDark } from "https://esm.sh/@codemirror/theme-one-dark";
+
+    const startCode = `// Opex Editor (CodeMirror 6)
+// Smooth, minimal, webview-ready
+function main() {
+  console.log("Welcome to the Opex Editor ✨");
+}
+main();`;
+
+    const view = new EditorView({
+      state: EditorState.create({
+        doc: startCode,
+        extensions: [basicSetup, javascript(), oneDark]
+      }),
+      parent: document.getElementById("editor")
+    });
+
+    // Optional helper to get the code from outside
+    window.getCode = () => view.state.doc.toString();
+  </script>
+</body>
+</html>
