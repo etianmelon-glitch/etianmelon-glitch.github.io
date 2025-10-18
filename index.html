@@ -80,14 +80,14 @@
 <body>
   <div class="stars"></div>
   <div class="editor-container">
-    <div id="editor">Loading editor…</div>
+    <div id="editor">Made by Etian</div>
   </div>
 
   <script src="https://unpkg.com/monaco-editor@0.43.0/min/vs/loader.js"></script>
   <script>
     require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.43.0/min/vs' } });
 
-    const sample = `// Welcome to Purple Galaxy\n\nfunction greet(name) {\n  console.log('Hello ' + name + '!');\n}\n\ngreet('World');`;
+    const sample = "Welcome to Opex Executor (Made by Etian)
 
     require(['vs/editor/editor.main'], function () {
       monaco.editor.defineTheme('purpleGalaxy', {
@@ -126,3 +126,4 @@
   </script>
 </body>
 </html>
+
