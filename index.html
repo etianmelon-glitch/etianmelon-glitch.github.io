@@ -1,128 +1,64 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Opex Executor — Monaco Editor Example</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg-1: #0b0326;
-      --bg-2: #1b063a;
-      --accent-1: #7c3aed;
-      --accent-2: #a78bfa;
-      --font: 'Inter', ui-sans-serif, system-ui;
-    }
-
-    html,body{
-      height:100%;
-      margin:0;
-      font-family:var(--font);
-      background: radial-gradient(1200px 600px at 10% 20%, rgba(124,58,237,0.14), transparent),
-                  radial-gradient(800px 600px at 90% 80%, rgba(167,139,250,0.06), transparent),
-                  linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
-      overflow:hidden;
-    }
-
-    .stars, .stars::after{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
-      background-image: radial-gradient(white 1px, transparent 1px);
-      background-size: 2px 2px;
-      opacity:0.06;
-      transform-origin:center;
-      animation: drift 60s linear infinite;
-    }
-    .stars::after{
-      content:'';
-      background-size: 3px 3px;
-      opacity:0.03;
-      animation-duration: 140s;
-      animation-direction: reverse;
-    }
-
-    @keyframes drift{
-      from{ transform: translateY(0) rotate(0deg); }
-      to{ transform: translateY(-1200px) rotate(360deg); }
-    }
-
-    .editor-container{
-      position:relative;
-      width:100%;
-      height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:1;
-      padding:20px;
-      box-sizing:border-box;
-    }
-
-    #editor{
-      width:100%;
-      height:100%;
-      border-radius:12px;
-      overflow:hidden;
-      box-shadow:0 0 40px rgba(124,58,237,0.3);
-      animation: float 6s ease-in-out infinite alternate;
-    }
-
-    @keyframes float {
-      from { transform: translateY(0); }
-      to { transform: translateY(-10px); }
-    }
-  </style>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #container {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-  <div class="stars"></div>
-  <div class="editor-container">
-    <div id="editor">Loading editor…</div>
-  </div>
+    <div id="container"></div>
 
-  <script src="https://unpkg.com/monaco-editor@0.43.0/min/vs/loader.js"></script>
-  <script>
-    require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.43.0/min/vs' } });
+    <script src="./vs/loader.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var editor;
 
-    const sample = `// Welcome to Opex Executor (Made by Etian) :)`;
+        require(["./vs/editor/editor.main"], function () {
+            // Define a custom theme with your desired background color
+            monaco.editor.defineTheme('myCustomTheme', {
+                base: 'vs-dark', // or 'vs' for light theme
+                inherit: true,
+                rules: [],
+                colors: {
+                    'editor.background': '#000000', // Use hex color for RGB(15, 15, 22)
+                    'editor.foreground': '#FFFFFF' // Adjust as needed for foreground color
+                }
+            });
 
-    require(['vs/editor/editor.main'], function () {
-      monaco.editor.defineTheme('purpleGalaxy', {
-        base: 'vs-dark',
-        inherit: true,
-        rules: [
-          { token: '', foreground: 'A78BFA', background: '0B0326' },
-          { token: 'keyword', foreground: 'C084FC', fontStyle: 'bold' },
-          { token: 'number', foreground: 'C084FC' },
-          { token: 'string', foreground: 'C084FC' },
-          { token: 'comment', foreground: '7C3AED', fontStyle: 'italic' }
-        ],
-        colors: {
-          'editor.background': '#0B0326',
-          'editor.foreground': '#A78BFA',
-          'editorCursor.foreground': '#C084FC',
-          'editorLineNumber.foreground': '#5B21B6',
-          'editorLineNumber.activeForeground': '#C4B5FD',
-          'editor.selectionBackground': '#6D28D966',
-          'editor.inactiveSelectionBackground': '#5B21B622'
+            // Create the editor with the custom theme
+            editor = monaco.editor.create(document.getElementById("container"), {
+                value: '',
+                language: "lua",
+                theme: "myCustomTheme", // Use the custom theme here
+                dragAndDrop: true,
+                links: true,
+                minimap: {
+                    enabled: true,
+                },
+                showFoldingControls: "always",
+                smoothScrolling: true,
+            });
+        });
+
+        function getValue() {
+            return editor.getValue();
         }
-      });
 
-      monaco.editor.create(document.getElementById('editor'), {
-        value: sample,
-        language: 'javascript',
-        theme: 'purpleGalaxy',
-        minimap: { enabled: false },
-        fontSize: 15,
-        lineHeight: 22,
-        smoothScrolling: true,
-        scrollBeyondLastLine: false,
-        automaticLayout: true
-      });
-    });
-  </script>
+        function setValue(value) {
+            editor.setValue(value);
+        }
+    </script>
 </body>
 </html>
